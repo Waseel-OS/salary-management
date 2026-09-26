@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Salary &amp; Payslip Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ========================================================
+         1. LOGIN VIEW
+         ======================================================== -->
+    <div id="loginView" class="login-view-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="icon">💼</div>
+                <h2>Employee Salary &amp; Payslip System</h2>
+                <p>Enterprise Management Portal - Sign In</p>
+            </div>
+            <div class="login-body">
+                <form id="loginForm">
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" class="input-control" value="admin" required placeholder="Enter username">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="input-control" value="admin123" required placeholder="Enter password">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+                        <input type="checkbox" id="chkShowPass" style="cursor: pointer;">
+                        <label for="chkShowPass" style="font-size: 12.5px; color: var(--text-muted); cursor: pointer;">Show Password</label>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <button type="button" id="btnClearLogin" class="btn btn-secondary">Clear</button>
+                        <button type="submit" class="btn btn-primary">Sign In &rarr;</button>
+                    </div>
+                    <div class="login-hint">Default Demo Login: admin / admin123</div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         2. MAIN APP CONTAINER
+         ======================================================== -->
+    <div id="appView" class="app-container" style="display: none;">
+        
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand-header">
+                <div class="brand-icon">💼</div>
+                <div>
+                    <div class="brand-title">PAYROLL PRO</div>
+                    <div class="brand-sub">Enterprise Edition</div>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-label">Main Menu</div>
+                <button class="nav-item active" data-tab="dashboard">
+                    <span class="icon">📊</span> Dashboard
+                </button>
+                <button class="nav-item" data-tab="employees">
+                    <span class="icon">👥</span> Employees
+                </button>
+                <button class="nav-item" data-tab="salary">
+                    <span class="icon">💰</span> Salary Management
+                </button>
+                <button class="nav-item" data-tab="payslips">
+                    <span class="icon">📄</span> Payslips
+                </button>
+                <button class="nav-item" data-tab="reports">
+                    <span class="icon">📈</span> Reports
+                </button>
+                <button class="nav-item" data-tab="schema">
+                    <span class="icon">🗄️</span> Database / Schema
+                </button>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="nav-item" id="btnLogout" style="color: #FDA4AF;">
+                    <span class="icon">🚪</span> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Right Area -->
+        <main class="main-area">
+            
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-title">Employee Salary &amp; Payslip Management System</div>
+                <div class="header-right">
+                    <div class="live-clock" id="liveClock">Loading time...</div>
+                    <div style="color: var(--border-light);">|</div>
+                    <div class="admin-badge">
+                        <div class="avatar">AD</div>
+                        <div class="admin-info">
+                            <span class="admin-name" id="adminDisplayName">System Admin</span>
+                            <span class="admin-status">&bull; Online</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div class="content-wrapper">
+                
+                <!-- TAB 1: DASHBOARD -->
+                <section id="view-dashboard" class="tab-view active">
+                    <div class="heading-row">
+                        <div>
+                            <h1 class="page-title">DASHBOARD OVERVIEW</h1>
+                            <p class="page-sub">Real-time summary of workforce strength, payroll disbursements, and payslip issues.</p>
+                        </div>
+                    </div>
+
+                    <!-- 4 Metric Cards -->
+                    <div class="stat-cards-grid">
+                        <div class="stat-card blue">
+                            <div>
+                                <div class="stat-title">Total Employees</div>
+                                <div class="stat-value" id="dashTotalEmployees">0</div>
+                                <div class="stat-sub">Full Roster</div>
+                            </div>
+                            <div class="stat-icon">👥</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div>
+                                <div class="stat-title">Active Employees</div>
+                                <div class="stat-value" id="dashActiveEmployees">0</div>
+                                <div class="stat-sub">On Payroll</div>
+                            </div>
+                            <div class="stat-icon">⚡</div>
+                        </div>
+                        <div class="stat-card amber">
+                            <div>
+                                <div class="stat-title">Total Salary Processed</div>
+                                <div class="stat-value" id="dashTotalSalary">&#8377; 0</div>
+                                <div class="stat-sub">Disbursed</div>
+                            </div>
+                            <div class="stat-icon">💰</div>
+                        </div>
+                        <div class="stat-card purple">
+                            <div>
+                                <div class="stat-title">Payslips Generated</div>
+                                <div class="stat-value" id="dashPayslipsGenerated">0</div>
+                                <div class="stat-sub">Official Slips</div>
+                            </div>
+                            <div class="stat-icon">📄</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions-bar">
+                        <span class="quick-label">Quick Actions:</span>
+                        <button class="btn btn-primary btn-sm" id="btnQuickAdd">+ Register Employee</button>
+                        <button class="btn btn-secondary btn-sm" id="btnQuickSal">Process Salary</button>
+                        <button class="btn btn-secondary btn-sm" id="btnQuickSlip">Generate Payslip</button>
+                        <button class="btn btn-secondary btn-sm" id="btnQuickRep">View Reports</button>
+                    </div>
+
+                    <!-- Recent Employee Records -->
+                    <div class="card-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">RECENT EMPLOYEE RECORDS</h3>
+                            <button class="btn btn-outline btn-sm" id="btnViewAllEmployees">View All Employees &rarr;</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="modern-table" id="tableRecentEmployees">
+                                <thead>
+                                    <tr>
+                                        <th>Employee ID</th>
+                                        <th>Employee Name</th>
+                                        <th>Department</th>
+                                        <th>Designation</th>
+                                        <th>Salary</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 2: EMPLOYEES DIRECTORY -->
+                <section id="view-employees" class="tab-view">
+                    <div class="heading-row">
+                        <div>
+                            <h1 class="page-title">EMPLOYEE DIRECTORY</h1>
+                            <p class="page-sub" id="empCounterText">Manage workforce records, contact information, and departments.</p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary" id="btnOpenAddEmployeeModal">+ Add Employee</button>
+                            <button class="btn btn-secondary" id="btnExportEmployeesCSV">Export CSV</button>
+                            <button class="btn btn-secondary" id="btnRefreshEmployees">Refresh</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Toolbar -->
+                    <div class="filter-toolbar">
+                        <div class="filter-group">
+                            <span class="filter-label">Search:</span>
+                            <input type="text" id="txtEmpSearch" class="input-control" placeholder="Search by name, ID, department..." style="width: 260px;">
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-label">Department:</span>
+                            <select id="cmbEmpDeptFilter" class="select-control" style="width: 170px;">
+                                <option value="All">All Departments</option>
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Operations">Operations</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-label">Status:</span>
+                            <select id="cmbEmpStatusFilter" class="select-control" style="width: 140px;">
+                                <option value="All">All Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="On Leave">On Leave</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Main Directory Table -->
+                    <div class="card-panel" style="padding: 0; overflow: hidden;">
+                        <div class="table-container" style="border: none;">
+                            <table class="modern-table" id="tableEmployeeDirectory">
+                                <thead>
+                                    <tr>
+                                        <th>Employee ID</th>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th>Designation</th>
+                                        <th>Joining Date</th>
+                                        <th>Basic Salary</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 3: SALARY MANAGEMENT -->
+                <section id="view-salary" class="tab-view">
+                    <div class="heading-row">
+                        <div>
+                            <h1 class="page-title">SALARY PROCESSING</h1>
+                            <p class="page-sub">Process monthly employee salaries, compute gross &amp; deductions, and calculate net payout.</p>
+                        </div>
+                        <button class="btn btn-secondary" id="btnAutoFillAllowances">Auto-Fill Standard Allowances</button>
+                    </div>
+
+                    <!-- Processing Form Card -->
+                    <div class="card-panel">
+                        <form id="salaryProcessForm">
+                            <div class="form-grid-3" style="margin-bottom: 16px;">
+                                <div class="form-group">
+                                    <label for="salSelectEmployee">Select Employee *</label>
+                                    <select id="salSelectEmployee" class="select-control" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="salSelectMonth">Salary Month *</label>
+                                    <select id="salSelectMonth" class="select-control">
+                                        <option value="January">January</option>
+                                        <option value="February">February</option>
+                                        <option value="March">March</option>
+                                        <option value="April">April</option>
+                                        <option value="May">May</option>
+                                        <option value="June">June</option>
+                                        <option value="July">July</option>
+                                        <option value="August">August</option>
+                                        <option value="September" selected>September</option>
+                                        <option value="October">October</option>
+                                        <option value="November">November</option>
+                                        <option value="December">December</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="salSelectYear">Salary Year *</label>
+                                    <select id="salSelectYear" class="select-control">
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026" selected>2026</option>
+                                        <option value="2027">2027</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-grid-3" style="margin-bottom: 14px;">
+                                <div class="form-group">
+                                    <label for="salBasic">Basic Salary (&#8377;) *</label>
+                                    <input type="number" id="salBasic" class="input-control" required value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="salHra">HRA - House Rent Allowance (&#8377;)</label>
+                                    <input type="number" id="salHra" class="input-control" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="salDa">DA - Dearness Allowance (&#8377;)</label>
+                                    <input type="number" id="salDa" class="input-control" value="0">
+                                </div>
+                            </div>
+
+                            <div class="form-grid-3" style="margin-bottom: 14px;">
+                                <div class="form-group">
+                                    <label for="salAllowances">Special Allowances (&#8377;)</label>
+                                    <input type="number" id="salAllowances" class="input-control" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="salBonus">Performance Bonus (&#8377;)</label>
+                                    <input type="number" id="salBonus" class="input-control" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="salPf">PF - Provident Fund (&#8377;)</label>
+                                    <input type="number" id="salPf" class="input-control" value="0">
+                                </div>
+                            </div>
+
+                            <div class="form-grid-2" style="margin-bottom: 14px;">
+                                <div class="form-group">
+                                    <label for="salPt">Professional Tax (PT &#8377;)</label>
+                                    <input type="number" id="salPt" class="input-control" value="200">
+                                </div>
+                                <div class="form-group">
+                                    <label for="salOtherDed">Other Deductions (&#8377;)</label>
+                                    <input type="number" id="salOtherDed" class="input-control" value="0">
+                                </div>
+                            </div>
+
+                            <!-- Live Calculation Banner -->
+                            <div class="calc-summary-banner">
+                                <div>
+                                    <div class="calc-block-title">Gross Salary (Earnings)</div>
+                                    <div class="calc-block-val gross" id="salGrossDisplay">&#8377; 0.00</div>
+                                </div>
+                                <div>
+                                    <div class="calc-block-title">Total Deductions</div>
+                                    <div class="calc-block-val ded" id="salDedDisplay">&#8377; 0.00</div>
+                                </div>
+                                <div>
+                                    <div class="calc-block-title">Net Salary (Take-Home)</div>
+                                    <div class="calc-block-val net" id="salNetDisplay">&#8377; 0.00</div>
+                                    <div class="calc-words" id="salWordsDisplay">Rupees Zero Only</div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                                <button type="button" id="btnResetSalaryForm" class="btn btn-secondary">Reset</button>
+                                <button type="button" id="btnCalculateSalary" class="btn btn-outline">Calculate Salary</button>
+                                <button type="submit" class="btn btn-primary">Save Salary Record</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Processed Salaries History Table -->
+                    <div class="card-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">PROCESSED SALARY RECORDS</h3>
+                            <button class="btn btn-secondary btn-sm" id="btnExportSalaryHistory">Export History</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="modern-table" id="tableProcessedSalaries">
+                                <thead>
+                                    <tr>
+                                        <th>Salary ID</th>
+                                        <th>Emp ID</th>
+                                        <th>Employee Name</th>
+                                        <th>Department</th>
+                                        <th>Month &amp; Year</th>
+                                        <th>Basic</th>
+                                        <th>Gross</th>
+                                        <th>Deductions</th>
+                                        <th>Net Salary</th>
+                                        <th>Processed Date</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 4: PAYSLIPS -->
+                <section id="view-payslips" class="tab-view">
+                    <div class="heading-row">
+                        <div>
+                            <h1 class="page-title">EMPLOYEE PAYSLIP</h1>
+                            <p class="page-sub">Generate, view, and print official company salary slips for any billing period.</p>
+                        </div>
+                    </div>
+
+                    <!-- Generator Card -->
+                    <div class="card-panel">
+                        <div class="form-grid-3" style="align-items: flex-end;">
+                            <div class="form-group">
+                                <label for="slipSelectEmployee">Select Employee *</label>
+                                <select id="slipSelectEmployee" class="select-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="slipSelectMonth">Select Month *</label>
+                                <select id="slipSelectMonth" class="select-control">
+                                    <option value="September" selected>September</option>
+                                    <option value="August">August</option>
+                                    <option value="July">July</option>
+                                    <option value="October">October</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="display: flex; flex-direction: row; gap: 12px; align-items: flex-end;">
+                                <div style="flex: 1;">
+                                    <label for="slipSelectYear">Select Year *</label>
+                                    <select id="slipSelectYear" class="select-control">
+                                        <option value="2026" selected>2026</option>
+                                        <option value="2025">2025</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" id="btnGeneratePayslip" style="height: 38px;">Generate Payslip</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generated Register Table -->
+                    <div class="card-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">GENERATED PAYSLIPS REGISTER</h3>
+                            <button class="btn btn-secondary btn-sm" id="btnExportPayslipsRegister">Export Register</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="modern-table" id="tablePayslipsRegister">
+                                <thead>
+                                    <tr>
+                                        <th>Payslip ID</th>
+                                        <th>Employee ID</th>
+                                        <th>Employee Name</th>
+                                        <th>Department</th>
+                                        <th>Period</th>
+                                        <th>Gross Salary</th>
+                                        <th>Net Salary</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 5: REPORTS -->
+                <section id="view-reports" class="tab-view">
+                    <div class="heading-row">
+                        <div>
+                            <h1 class="page-title">PAYROLL &amp; SALARY REPORTS</h1>
+                            <p class="page-sub">Audit compensation distribution, department expenditures, and payment records.</p>
+                        </div>
+                        <button class="btn btn-primary" id="btnExportActiveReportCSV">Export Report (CSV)</button>
+                    </div>
+
+                    <div class="filter-toolbar">
+                        <div class="filter-group">
+                            <span class="filter-label">Select Report:</span>
+                            <select id="cmbReportType" class="select-control" style="width: 250px;">
+                                <option value="employee">Employee Salary Report</option>
+                                <option value="department">Department-wise Salary Report</option>
+                                <option value="monthly">Monthly Salary Report</option>
+                                <option value="payslip">Payslip Register Report</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-label">Filter / Search:</span>
+                            <input type="text" id="txtReportSearch" class="input-control" placeholder="Type to filter..." style="width: 220px;">
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="btnRefreshReport">Refresh</button>
+                    </div>
+
+                    <div class="card-panel">
+                        <div class="table-container">
+                            <table class="modern-table" id="tableReports">
+                                <thead></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-weight: 700; font-size: 13.5px;">
+                            <span id="repRecordsCount">Records: 0</span>
+                            <span id="repTotalPayout" style="color: var(--primary-blue);">Total Payout: &#8377; 0.00</span>
+                            <span id="repAvgPayout" style="color: var(--success-text);">Average Net: &#8377; 0.00</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 6: DATABASE SCHEMA ARCHITECTURE -->
+                <section id="view-schema" class="tab-view">
+                    <div class="heading-row">
+                        <div>
+                            <h1 class="page-title">DATABASE DESIGN &amp; SCHEMA ARCHITECTURE</h1>
+                            <p class="page-sub">Relational Database Schema, Tables, Constraints &amp; Foreign Key Integrity | Database: employee_salary_management</p>
+                        </div>
+                        <button class="btn btn-primary" id="btnSimulateTestConn">Test MySQL Connection</button>
+                    </div>
+
+                    <!-- Active Connection Card -->
+                    <div class="card-panel" style="background-color: #F8FAFC; border-left: 5px solid var(--primary-blue);">
+                        <div style="font-size: 15px; font-weight: 800; color: var(--primary-navy);" id="schemaEngineStatus">
+                            &bull; MySQL / Local Storage Engine Active
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                            Database: employee_salary_management | Tables: employees, salary, payslips, admin | Strict 3NF Relational Model
+                        </div>
+                    </div>
+
+                    <!-- Schema Tables Grid -->
+                    <div class="card-panel">
+                        <h3 class="panel-title" style="margin-bottom: 12px;">1. employees Table (Core Employee Master Record)</h3>
+                        <div class="table-container" style="margin-bottom: 24px;">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr><th>Column Name</th><th>Data Type</th><th>Constraint / Key</th><th>Default</th><th>Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>employee_id</strong></td><td>VARCHAR(20)</td><td><span class="status-badge active">PRIMARY KEY</span></td><td>None</td><td>Unique alphanumeric employee identifier (e.g. EMP001)</td></tr>
+                                    <tr><td>first_name</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>None</td><td>Employee given name</td></tr>
+                                    <tr><td>last_name</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>None</td><td>Employee surname</td></tr>
+                                    <tr><td>gender</td><td>VARCHAR(10)</td><td>NOT NULL</td><td>None</td><td>Gender (Male, Female, Other)</td></tr>
+                                    <tr><td>dob</td><td>DATE</td><td>NOT NULL</td><td>None</td><td>Date of birth (YYYY-MM-DD)</td></tr>
+                                    <tr><td>email</td><td>VARCHAR(100)</td><td>UNIQUE, NOT NULL</td><td>None</td><td>Official employee email address</td></tr>
+                                    <tr><td>phone</td><td>VARCHAR(20)</td><td>NOT NULL</td><td>None</td><td>10-digit mobile number</td></tr>
+                                    <tr><td>department</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>None</td><td>Department (IT, HR, Finance, Marketing, Operations)</td></tr>
+                                    <tr><td>designation</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>None</td><td>Official job designation</td></tr>
+                                    <tr><td>joining_date</td><td>DATE</td><td>NOT NULL</td><td>None</td><td>Company appointment date</td></tr>
+                                    <tr><td>basic_salary</td><td>DECIMAL(12,2)</td><td>NOT NULL</td><td>0.00</td><td>Base wage per month in INR</td></tr>
+                                    <tr><td>bank_account</td><td>VARCHAR(30)</td><td>NOT NULL</td><td>None</td><td>Bank account number for salary credit</td></tr>
+                                    <tr><td>pan_number</td><td>VARCHAR(20)</td><td>NOT NULL</td><td>None</td><td>PAN number for tax compliance</td></tr>
+                                    <tr><td>status</td><td>VARCHAR(20)</td><td>None</td><td>'Active'</td><td>Employment status (Active, Inactive, On Leave)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 class="panel-title" style="margin-bottom: 12px;">2. salary Table (Monthly Payroll Calculations)</h3>
+                        <div class="table-container" style="margin-bottom: 24px;">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr><th>Column Name</th><th>Data Type</th><th>Constraint / Key</th><th>Default</th><th>Formula / Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>salary_id</strong></td><td>INT</td><td><span class="status-badge active">PRIMARY KEY, AUTO_INCREMENT</span></td><td>None</td><td>Unique salary record ID</td></tr>
+                                    <tr><td><strong>employee_id</strong></td><td>VARCHAR(20)</td><td><span class="status-badge leave">FOREIGN KEY &rarr; employees</span></td><td>None</td><td>References employees(employee_id) ON DELETE CASCADE</td></tr>
+                                    <tr><td>salary_month</td><td>VARCHAR(20)</td><td>NOT NULL</td><td>None</td><td>Billing month (e.g. September)</td></tr>
+                                    <tr><td>salary_year</td><td>INT</td><td>NOT NULL</td><td>None</td><td>Billing year (e.g. 2026)</td></tr>
+                                    <tr><td>basic_salary</td><td>DECIMAL(12,2)</td><td>NOT NULL</td><td>0.00</td><td>Base salary component</td></tr>
+                                    <tr><td>hra</td><td>DECIMAL(12,2)</td><td>None</td><td>0.00</td><td>House Rent Allowance (40% of Basic)</td></tr>
+                                    <tr><td>da</td><td>DECIMAL(12,2)</td><td>None</td><td>0.00</td><td>Dearness Allowance (10% of Basic)</td></tr>
+                                    <tr><td>allowances</td><td>DECIMAL(12,2)</td><td>None</td><td>0.00</td><td>Special / travel / medical allowances</td></tr>
+                                    <tr><td>bonus</td><td>DECIMAL(12,2)</td><td>None</td><td>0.00</td><td>Performance bonus or incentive</td></tr>
+                                    <tr><td>pf</td><td>DECIMAL(12,2)</td><td>None</td><td>0.00</td><td>Provident Fund deduction (12% of Basic)</td></tr>
+                                    <tr><td>professional_tax</td><td>DECIMAL(12,2)</td><td>None</td><td>0.00</td><td>Professional Tax (standard &#8377;200)</td></tr>
+                                    <tr><td>other_deductions</td><td>DECIMAL(12,2)</td><td>None</td><td>0.00</td><td>Loss of pay or advance recoveries</td></tr>
+                                    <tr><td>gross_salary</td><td>DECIMAL(12,2)</td><td>NOT NULL</td><td>0.00</td><td>Gross = Basic + HRA + DA + Allowances + Bonus</td></tr>
+                                    <tr><td>total_deductions</td><td>DECIMAL(12,2)</td><td>NOT NULL</td><td>0.00</td><td>Deductions = PF + Prof Tax + Other Deductions</td></tr>
+                                    <tr><td>net_salary</td><td>DECIMAL(12,2)</td><td>NOT NULL</td><td>0.00</td><td>Net = Gross - Total Deductions</td></tr>
+                                    <tr><td>processed_date</td><td>DATE</td><td>None</td><td>CURRENT_DATE</td><td>Payroll processing timestamp</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 class="panel-title" style="margin-bottom: 12px;">3. payslips Table (Official Disbursed Salary Slips)</h3>
+                        <div class="table-container" style="margin-bottom: 24px;">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr><th>Column Name</th><th>Data Type</th><th>Constraint / Key</th><th>Default</th><th>Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>payslip_id</strong></td><td>INT</td><td><span class="status-badge active">PRIMARY KEY, AUTO_INCREMENT</span></td><td>None</td><td>Unique payslip serial identifier</td></tr>
+                                    <tr><td><strong>employee_id</strong></td><td>VARCHAR(20)</td><td><span class="status-badge leave">FOREIGN KEY &rarr; employees</span></td><td>None</td><td>References employees(employee_id) ON DELETE CASCADE</td></tr>
+                                    <tr><td><strong>salary_id</strong></td><td>INT</td><td><span class="status-badge leave">FOREIGN KEY &rarr; salary</span></td><td>None</td><td>References salary(salary_id) ON DELETE CASCADE</td></tr>
+                                    <tr><td>generated_date</td><td>TIMESTAMP</td><td>None</td><td>CURRENT_TIMESTAMP</td><td>Date and time of official slip issue</td></tr>
+                                    <tr><td>status</td><td>VARCHAR(20)</td><td>None</td><td>'Generated'</td><td>Slip status ('Generated', 'Issued', 'Paid')</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 class="panel-title" style="margin-bottom: 12px;">4. admin Table (System Credentials &amp; Access)</h3>
+                        <div class="table-container">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr><th>Column Name</th><th>Data Type</th><th>Constraint / Key</th><th>Default</th><th>Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>admin_id</strong></td><td>INT</td><td><span class="status-badge active">PRIMARY KEY, AUTO_INCREMENT</span></td><td>None</td><td>Unique admin ID</td></tr>
+                                    <tr><td>username</td><td>VARCHAR(50)</td><td>UNIQUE, NOT NULL</td><td>None</td><td>Login username ('admin')</td></tr>
+                                    <tr><td>password</td><td>VARCHAR(255)</td><td>NOT NULL</td><td>None</td><td>Login password ('admin123')</td></tr>
+                                    <tr><td>full_name</td><td>VARCHAR(100)</td><td>None</td><td>'System Administrator'</td><td>Display name</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================================================
+         MODALS & DIALOGS
+         ======================================================== -->
+    
+    <!-- MODAL 1: ADD EMPLOYEE -->
+    <div id="modalAddEmployee" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>NEW EMPLOYEE REGISTRATION</h3>
+                <button class="close-btn" data-close-modal="modalAddEmployee">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formAddEmployee">
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="addEmpId">Employee ID (Auto-generated)</label>
+                            <input type="text" id="addEmpId" class="input-control" readonly style="background-color: #F1F5F9;">
+                        </div>
+                        <div class="form-group">
+                            <label for="addEmpStatus">Employment Status</label>
+                            <select id="addEmpStatus" class="select-control">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="On Leave">On Leave</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="addEmpFName">First Name *</label>
+                            <input type="text" id="addEmpFName" class="input-control" required placeholder="e.g. Rahul">
+                        </div>
+                        <div class="form-group">
+                            <label for="addEmpLName">Last Name *</label>
+                            <input type="text" id="addEmpLName" class="input-control" required placeholder="e.g. Sharma">
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="addEmpGender">Gender *</label>
+                            <select id="addEmpGender" class="select-control">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="addEmpDob">Date of Birth (YYYY-MM-DD) *</label>
+                            <input type="date" id="addEmpDob" class="input-control" value="1996-05-15" required>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="addEmpEmail">Email Address *</label>
+                            <input type="email" id="addEmpEmail" class="input-control" required placeholder="employee@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="addEmpPhone">Mobile Number (10-digit) *</label>
+                            <input type="tel" id="addEmpPhone" class="input-control" required pattern="[6-9][0-9]{9}" placeholder="9876543210">
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="addEmpDept">Department *</label>
+                            <select id="addEmpDept" class="select-control">
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Operations">Operations</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="addEmpDesig">Designation *</label>
+                            <input type="text" id="addEmpDesig" class="input-control" required placeholder="e.g. Software Developer">
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="addEmpJoinDate">Joining Date *</label>
+                            <input type="date" id="addEmpJoinDate" class="input-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addEmpBasic">Basic Salary (&#8377; / Month) *</label>
+                            <input type="number" id="addEmpBasic" class="input-control" required min="1000" placeholder="50000">
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="addEmpBank">Bank Account Number *</label>
+                            <input type="text" id="addEmpBank" class="input-control" required placeholder="HDFC000123456789">
+                        </div>
+                        <div class="form-group">
+                            <label for="addEmpPan">PAN Number (e.g. ABCDE1234F) *</label>
+                            <input type="text" id="addEmpPan" class="input-control" required pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]" placeholder="ABCPS1234F" style="text-transform: uppercase;">
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding-right: 0; padding-bottom: 0;">
+                        <button type="button" class="btn btn-secondary" id="btnResetAddForm">Reset Form</button>
+                        <button type="button" class="btn btn-secondary" data-close-modal="modalAddEmployee">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Employee</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: EDIT EMPLOYEE -->
+    <div id="modalEditEmployee" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>EDIT EMPLOYEE INFORMATION</h3>
+                <button class="close-btn" data-close-modal="modalEditEmployee">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditEmployee">
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="editEmpId">Employee ID</label>
+                            <input type="text" id="editEmpId" class="input-control" readonly style="background-color: #F1F5F9;">
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpStatus">Employment Status</label>
+                            <select id="editEmpStatus" class="select-control">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="On Leave">On Leave</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="editEmpFName">First Name *</label>
+                            <input type="text" id="editEmpFName" class="input-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpLName">Last Name *</label>
+                            <input type="text" id="editEmpLName" class="input-control" required>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="editEmpGender">Gender</label>
+                            <select id="editEmpGender" class="select-control">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpDob">Date of Birth</label>
+                            <input type="date" id="editEmpDob" class="input-control" required>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="editEmpEmail">Email Address</label>
+                            <input type="email" id="editEmpEmail" class="input-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpPhone">Phone Number</label>
+                            <input type="tel" id="editEmpPhone" class="input-control" required>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="editEmpDept">Department</label>
+                            <select id="editEmpDept" class="select-control">
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Operations">Operations</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpDesig">Designation</label>
+                            <input type="text" id="editEmpDesig" class="input-control" required>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="editEmpJoinDate">Joining Date</label>
+                            <input type="date" id="editEmpJoinDate" class="input-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpBasic">Basic Salary (&#8377; / Month)</label>
+                            <input type="number" id="editEmpBasic" class="input-control" required>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label for="editEmpBank">Bank Account</label>
+                            <input type="text" id="editEmpBank" class="input-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpPan">PAN Number</label>
+                            <input type="text" id="editEmpPan" class="input-control" required style="text-transform: uppercase;">
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding-right: 0; padding-bottom: 0;">
+                        <button type="button" class="btn btn-secondary" data-close-modal="modalEditEmployee">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: VIEW EMPLOYEE PROFILE -->
+    <div id="modalViewEmployee" class="modal-overlay">
+        <div class="modal-card" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 id="viewProfileTitle">EMPLOYEE DETAILS</h3>
+                <button class="close-btn" data-close-modal="modalViewEmployee">&times;</button>
+            </div>
+            <div class="modal-body" id="viewProfileBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btnEditFromView">Edit Details</button>
+                <button class="btn btn-secondary" data-close-modal="modalViewEmployee">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: PAYSLIP PREVIEW DIALOG -->
+    <div id="modalPayslipPreview" class="modal-overlay">
+        <div class="modal-card" style="max-width: 860px; max-height: 95vh;">
+            <div class="modal-header">
+                <h3>Official Salary Slip Preview</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary btn-sm" id="btnPrintPayslip">Print Payslip</button>
+                    <button class="btn btn-secondary btn-sm" id="btnDownloadPayslipText">Save as Text</button>
+                    <button class="close-btn" data-close-modal="modalPayslipPreview" style="margin-left: 10px;">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body" id="payslipPreviewContainer" style="background-color: #E2E8F0; padding: 25px;"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close-modal="modalPayslipPreview">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/salaryCalc.js"></script>
+    <script src="js/payslip.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
