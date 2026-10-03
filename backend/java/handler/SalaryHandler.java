@@ -1,7 +1,7 @@
-package com.salarymanagement.handler;
+package handler;
 
-import com.salarymanagement.data_retriever.SalaryDB;
-import com.salarymanagement.model.Salary;
+import data_retriever.SalaryDB;
+import model.Salary;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;

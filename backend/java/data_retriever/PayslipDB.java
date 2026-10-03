@@ -1,7 +1,7 @@
-package com.salarymanagement.data_retriever;
+package data_retriever;
 
 import com.salarymanagement.config.DatabaseConfig;
-import com.salarymanagement.model.Payslip;
+import model.Payslip;
 
 import java.sql.*;
 import java.time.LocalDateTime;

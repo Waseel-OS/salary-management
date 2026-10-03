@@ -1,7 +1,7 @@
-package com.salarymanagement.data_retriever;
+package data_retriever;
 
 import com.salarymanagement.config.DatabaseConfig;
-import com.salarymanagement.model.Salary;
+import model.Salary;
 
 import java.sql.*;
 import java.util.ArrayList;

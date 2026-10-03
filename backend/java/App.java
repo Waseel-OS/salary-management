@@ -1,7 +1,5 @@
-package com.salarymanagement;
-
-import com.salarymanagement.config.DatabaseConfig;
-import com.salarymanagement.handler.*;
+import config.DatabaseConfig;
+import handler.*;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.File;

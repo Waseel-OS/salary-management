@@ -1,11 +1,11 @@
-package com.salarymanagement.handler;
+package handler;
 
-import com.salarymanagement.data_retriever.EmployeeDB;
-import com.salarymanagement.data_retriever.PayslipDB;
-import com.salarymanagement.data_retriever.SalaryDB;
-import com.salarymanagement.model.Employee;
-import com.salarymanagement.model.Payslip;
-import com.salarymanagement.model.Salary;
+import data_retriever.EmployeeDB;
+import data_retriever.PayslipDB;
+import data_retriever.SalaryDB;
+import model.Employee;
+import model.Payslip;
+import model.Salary;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
