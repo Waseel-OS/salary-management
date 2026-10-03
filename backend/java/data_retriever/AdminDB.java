@@ -1,6 +1,6 @@
 package data_retriever;
 
-import com.salarymanagement.config.DatabaseConfig;
+import config.DatabaseConfig;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

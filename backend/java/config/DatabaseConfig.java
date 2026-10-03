@@ -1,4 +1,4 @@
-package com.salarymanagement.config;
+package config;
 
 import java.io.InputStream;
 import java.sql.Connection;

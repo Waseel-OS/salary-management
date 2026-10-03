@@ -1,6 +1,6 @@
 package data_retriever;
 
-import database.DatabaseConfig;
+import config.DatabaseConfig;
 import model.Employee;
 
 import java.sql.*;
