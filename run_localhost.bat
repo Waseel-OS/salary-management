@@ -1,18 +1,21 @@
 @echo off
-title Employee Salary & Payslip Management - Localhost Server
+title Employee Salary ^& Payslip System - Java Server
 echo ================================================================
-echo   STARTING LOCALHOST WEB SERVER (PORT 8080)
+echo   STARTING JAVA WEB SERVER (PORT 8080)
 echo   Employee Salary and Payslip Management System
 echo ================================================================
 echo.
 
 cd /d "%~dp0"
 
-echo Opening browser at http://localhost:8080 ...
+echo Opening http://localhost:8080 in your default browser...
 start "" "http://localhost:8080"
 
 echo.
-echo Starting Python HTTP Web Server...
-python web_server.py 8080
+echo Starting Java Web Server on Port 8080...
+echo.
+
+cd backend
+call mvn compile exec:java
 
 pause
